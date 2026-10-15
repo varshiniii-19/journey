@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Management System</title>
+</head>
+
+<body>
+
+Enter Student Name:
+<input type="text" id="name">
+<br><br>
+
+Enter Student Roll Number:
+<input type="text" id="roll">
+<br><br>
+
+Enter Student Branch:
+<input type="text" id="br">
+<br><br>
+
+Enter Student Year:
+<input type="text" id="yr">
+<br><br>
+
+Enter Student CGPA:
+<input type="text" id="cg">
+<br><br>
+
+<input type="button" value="INSERT" id="b1">
+<input type="button" value="DELETE" id="b2">
+<input type="button" value="UPDATE" id="b3">
+<input type="button" value="DISPLAY" id="b4">
+
+<br><br>
+
+<div id="d"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+import { getDatabase, set, ref, get, update, remove, child }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-e7cJ6fjumhdx5bcA4qfZ5NsEDTJSF_E",
+  authDomain: "datascience-31078.firebaseapp.com",
+  databaseURL: "https://datascience-31078-default-rtdb.firebaseio.com",
+  projectId: "datascience-31078",
+  storageBucket: "datascience-31078.firebasestorage.app",
+  messagingSenderId: "927805788286",
+  appId: "1:927805788286:web:27efcbfebce18fc2db882f"
+};
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+const dbRef = ref(db);
+
+document.getElementById("b1").addEventListener("click", insertData);
+document.getElementById("b2").addEventListener("click", deleteData);
+document.getElementById("b3").addEventListener("click", updateData);
+document.getElementById("b4").addEventListener("click", displayData);
+
+function insertData(){
+
+var n=document.getElementById("name").value;
+var r=document.getElementById("roll").value;
+var b=document.getElementById("br").value;
+var y=document.getElementById("yr").value;
+var c=document.getElementById("cg").value;
+
+var ob={
+name:n,
+branch:b,
+year:y,
+cgpa:c
+};
+
+set(ref(db,"Student/"+r),ob);
+
+alert("Student Data Inserted Successfully");
+
+}
+
+function deleteData(){
+
+var r=document.getElementById("roll").value;
+
+if(r=="")
+alert("Please Enter Roll Number");
+
+else{
+
+remove(ref(db,"Student/"+r));
+
+alert("Student Data Deleted Successfully");
+
+}
+
+}
+
+function updateData(){
+
+var n=document.getElementById("name").value;
+var r=document.getElementById("roll").value;
+var b=document.getElementById("br").value;
+var y=document.getElementById("yr").value;
+var c=document.getElementById("cg").value;
+
+var ob={
+name:n,
+branch:b,
+year:y,
+cgpa:c
+};
+
+update(ref(db,"Student/"+r),ob);
+
+alert("Student Data Updated Successfully");
+
+}
+
+function displayData(){
+
+var r=document.getElementById("roll").value;
+
+if(r==""){
+
+alert("Please Enter Roll Number");
+
+}
+
+else{
+
+get(child(dbRef,"Student/"+r)).then(function(data){
+
+if(data.exists()){
+
+var ob=data.val();
+
+document.getElementById("d").innerHTML=
+
+"Roll Number : "+r+"<br>"+
+
+"Name : "+ob.name+"<br>"+
+
+"Branch : "+ob.branch+"<br>"+
+
+"Year : "+ob.year+"<br>"+
+
+"CGPA : "+ob.cgpa;
+
+}
+
+else{
+
+alert("NO DATA AVAILABLE");
+
+document.getElementById("d").innerHTML="";
+
+}
+
+});
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
